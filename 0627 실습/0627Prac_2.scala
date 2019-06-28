@@ -11,42 +11,48 @@ object s8_dataWritingDatabase {
     val spark = new SQLContext(sc)
     import spark.implicits._
 
-    ///////////////////////////  데이터 파일 로딩  ////////////////////////////////////
-    // 접속정보 설정 (1)
-    //접속정보 맞추는 것 중요함
-    var staticUrl = "jdbc:oracle:thin:@192.168.110.112:1521/orcl"
-    var staticUser = "kopo"
-    var staticPw = "kopo"
-    var selloutDb = "KOPO_CHANNEL_SEASONALITY_NEW"
 
-    // 관계형 데이터베이스 Oracle 연결 (2)
-    val dataFromOracle= spark.read.format("jdbc").
-      option("url",staticUrl).
-      option("dbtable",selloutDb).
-      option("user",staticUser).
-      option("password",staticPw).load
+    //QUIZ2_PRO_ACTUAL_SALES의 데이터를 살펴보니... 중간중간에 데이터가 빠져있다 데이터의 빈 공간에 실적 0이라고 채우자!
+    ///////////////////////////  데이터 파일 로딩  ////////////////////////////////////
+    // 데이터 파일 로딩
+    // 파일명 설정 및 파일 읽기 (2)
+    var paramFile = "PRO_ACTUAL_SALES.CSV"
+
+    // 절대경로 입력
+    var paramData=
+      spark.read.format("csv").
+        option("header","true").
+        option("Delimiter",",").
+        load("c:/spark/bin/data/"+paramFile)
 
     // 데이터 확인 (3)
-    println(dataFromOracle.show(5))
+    print(paramData.show)
 
-    //데이터 정제- 지역/상품별 실적정보
+
+    //데이터 정제- 빠진 YEARWEEK 파악
     //step1. groupBy 지역, 상품
     //step2. data에서 qty만 뽑아서 정제
     //step3. 111 에 저장
 
     //step1
     //1) 컬럼별 인데스 생성
-    var rddColumns = dataFromOracle.columns.map(x=>{
-      x.toUpperCase
-    })
+//    var rddColumns = paramData.columns.map(x=>{
+//      x.toUpperCase
+//    })
 
-    var regionidNo = rddColumns.indexOf("REGIONID")
-    var productNo = rddColumns.indexOf("PRODUCT")
-    var yearweekNo = rddColumns.indexOf("YEARWEEK")
-    var qtyNo = rddColumns.indexOf("QTY")
+    var regionSeg1No = rddColumns.indexOf("regionSeg1")
+    var productSeg2No = rddColumns.indexOf("productSeg2")
+    var regionSeg2No = rddColumns.indexOf("regionSeg2")
+    var regionSeg3No = rddColumns.indexOf("regionSeg3")
+    var productSeg3No = rddColumns.indexOf("productSeg3")
+    var yearweekNo = rddColumns.indexOf("yearweek")
+    var yearNo = rddColumns.indexOf("year")
+    var weekNo = rddColumns.indexOf("week")
+    var qtyNo = rddColumns.indexOf("qty")
+
 
     //2) RDD 변환
-    var quiz1Rdd = dataFromOracle.rdd
+    var quiz2Rdd = paramData.rdd
 
     //step2
     //1) 지역, 상품별 평균 거래량 산출
@@ -81,13 +87,13 @@ object s8_dataWritingDatabase {
     prop.setProperty("user", outputUser)
     prop.setProperty("password", outputPw)
 
-    //5) tempView 에 올림
+    //3) tempView 에 올림
     middleResult.createOrReplaceTempView("Haeri_MIDDLETABLE")
 
     val table = "KOPO_2019_HAERI"
     //append
     middleResult.write.mode("overwrite").jdbc(outputUrl, table, prop)
-//    res90.write.mode("overwrite").jdbc(outputUrl, table, prop)
+    res90.write.mode("overwrite").jdbc(outputUrl, table, prop)
 
   }
 }
