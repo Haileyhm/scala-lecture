@@ -24,22 +24,22 @@ object s4_rddFilter {
         spark.read.format("csv").
           option("header","true").
           option("Delimiter",",").
-    load(workPath+fileName)
-    outDataFrame
-  }
+          load(workPath+fileName)
+      outDataFrame
+    }
 
-  var filterRddSampleData = csvFileLoading(filePath,sampleName)
+    var filterRddSampleData = csvFileLoading(filePath,sampleName)
 
-  // 데이터 확인
-  println(filterRddSampleData.show(5))
+    // 데이터 확인
+    println(filterRddSampleData.show(5))
 
 
-  var filterSampleRdd = filterRddSampleData.rdd
+    var filterSampleRdd = filterRddSampleData.rdd
 
-  // 컬럼 인덱스
-  var missingValueColumns = filterRddSampleData.columns
+    // 컬럼 인덱스
+    var missingValueColumns = filterRddSampleData.columns
 
-  var regionidNo = missingValueColumns.indexOf("REGIONID")
+    var regionidNo = missingValueColumns.indexOf("REGIONID")
     var productgNo = missingValueColumns.indexOf("PRODUCTGROUP")
     var yearweekNo = missingValueColumns.indexOf("YEARWEEK")
     var volumeNo = missingValueColumns.indexOf("VOLUME")
@@ -53,19 +53,30 @@ object s4_rddFilter {
       var checkValid = true
       // 컬럼 개수 확인
       if(row.getString(yearweekNo).size != YEARWEEK_SIZE){
-      checkValid = false
-    }
-    checkValid
-  })
+        checkValid = false
+      }
+      checkValid
+    })
 
 
-  //예제 _ 52주 이상인 것만 보기
-  var x = rawRdd.filter(x=>{
-    var checkValid = true
-    if(x.getString(yearweekNo).substring(4,6).toInt > 52){
-      checkValid = false}
-    checkValid
-  })
+    //예제 _ 파라미터 사용해서 조회
+    var paramRegionId = "A12"
+    var paramProductGroup = "MOBILE"
+
+
+    var x = filterSampleRdd.filter(row=>{
+      var checkValid = false
+      if(row.getString(regionidNo) == paramRegionId &&
+          row.getString(productgNo) == paramProductGroup &&
+          row.getString(qtyNo).toDouble > 200000){
+        checkValid = true
+      }
+      checkValid
+    })
+
+
+
+
 
 
     // missingValue 처리
@@ -73,7 +84,7 @@ object s4_rddFilter {
 
       // 컬럼 개수 확인
       var rowSize = row.size
-      // 데이터 유효성 판단 변수  생성
+      // 데이터 유효성 판단 변수 생성
       var checkValid = true
 
       for (i <- 0  until rowSize) {

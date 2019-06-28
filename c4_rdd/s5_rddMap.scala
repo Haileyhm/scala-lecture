@@ -59,7 +59,8 @@ object s5_rddMap {
       Row(row.getString(regionidNo)
         , row.getString(productgNo)
         , row.getString(yearweekNo)
-        , volume)
+        , volume
+        , 0) //=======================================================================> 컬럼이 만들어지면서 생겨
     })
 
     var debuggingCase1 = filteredRdd.first

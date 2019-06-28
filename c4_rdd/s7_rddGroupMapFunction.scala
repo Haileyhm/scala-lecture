@@ -18,39 +18,39 @@ object s7_rddGroupMapFunction {
 
     // 파일 불러오기 함수 정의
     def csvFileLoading(workPath: String, fileName: String)
-    : org.apache.spark.sql.DataFrame = {
-      var outDataFrame=
-        spark.read.format("csv").
-          option("header","true").
-          option("Delimiter",",").
-          load(workPath+fileName)
-      outDataFrame
-    }
+          : org.apache.spark.sql.DataFrame = {
+          var outDataFrame=
+            spark.read.format("csv").
+              option("header","true").
+              option("Delimiter",",").
+              load(workPath+fileName)
+          outDataFrame
+        }
 
-    var rddSampleData = csvFileLoading(filePath,sampleName)
+        var rddSampleData = csvFileLoading(filePath,sampleName)
 
-    // 데이터 확인
-    println(rddSampleData.show(5))
+        // 데이터 확인
+        println(rddSampleData.show(5))
 
-    // 컬럼별 인데스 생성
-    var rddColumns = rddSampleData.columns
+        // 컬럼별 인데스 생성
+        var rddColumns = rddSampleData.columns
 
-    var regionidNo = rddColumns.indexOf("REGIONID")
-    var productgNo = rddColumns.indexOf("PRODUCTGROUP")
-    var yearweekNo = rddColumns.indexOf("YEARWEEK")
-    var volumeNo = rddColumns.indexOf("VOLUME")
+        var regionidNo = rddColumns.indexOf("REGIONID")
+        var productgNo = rddColumns.indexOf("PRODUCTGROUP")
+        var yearweekNo = rddColumns.indexOf("YEARWEEK")
+        var volumeNo = rddColumns.indexOf("VOLUME")
 
-    // 1. RDD 변환
-    var sampleRdd = rddSampleData.rdd
+        // 1. RDD 변환
+        var sampleRdd = rddSampleData.rdd
 
-    // regionid, productgroup, yearweek, volume
-    // 2. 지역, 상품별 평균 거래량 산출
-    var groupMapFunction = sampleRdd.groupBy(x=>{
-      (x.getString(regionidNo),
-        x.getString(productgNo))}).
-      map(x=>{
-        // 그룹별 분산처리가 수행됨
-        var key = x._1
+        // regionid, productgroup, yearweek, volume
+        // 2. 지역, 상품별 평균 거래량 산출
+        var groupMapFunction = sampleRdd.groupBy(x=>{
+          (x.getString(regionidNo),
+            x.getString(productgNo))}).
+          map(x=>{
+            // 그룹별 분산처리가 수행됨
+            var key = x._1
         var data = x._2
         var size = data.size
         var volumeSum = data.map(x=>{x.getString(volumeNo).toDouble}).sum

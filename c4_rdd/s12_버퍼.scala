@@ -62,6 +62,7 @@ object s6_rddGroupby {
       var data = x._2
       var size = data.size
       (key, size)
+
     })
 
     var groupMap = groupRdd.collectAsMap() //이렇게 해두면 나중에 groupMap("A01", "ST0001") 하면 Double = 646782.5769230769
