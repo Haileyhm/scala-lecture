@@ -62,7 +62,9 @@ object s8_dataWritingDatabase {
       //BigDecimal cannot be cast to java.lang.String 오류가 남
       //qtyNo 이 number 타입인데 String으로 변환할 때 나는 오류 -> 아래처럼 변환
       var qtySum = data.map(x=>{String.valueOf(x.get(qtyNo)).toDouble}).sum
-      (x._1, x._2, qtySum) // (key, qtySum) key들을 array처럼 인식해서 오류가 남
+      (x._1._1, x._1._2, qtySum) // (key, qtySum) key들을 array처럼 인식해서 오류가 남
+    //x._1._1 은 key 중에서 첫번째인 x.getString(regionidNo) 의 값
+    //x._1._2 는 key 중에서 두번째인 x.getString(productNo) 의 값
     })
 
 

@@ -27,5 +27,15 @@ object s1_dataLoadingFile {
 
     // 데이터 확인 (3)
     print(selloutData.show)
+
+
+    //dataframe 조회하기
+    //데이터프레임 행 조회
+    var selloutDataRow = selloutData.filter($"REGIONID" === "A01" && $"YEARWEEK" < 201515)
+
+    //데이터프레임 열 조회
+    var selloutDataCol = selloutData.select("PRODUCTGROUP","YEARWEEK","VOLUME").
+    filter($"YEARWEEK" > 201650 && $"PRODUCTGROUP" === "ST0002")
+
   }
 }

@@ -16,16 +16,55 @@ object s1_dataLoadingFile {
 
     // 데이터 파일 로딩
     // 파일명 설정 및 파일 읽기 (2)
-    var paramFile = "KOPO_PRODUCT_VOLUME.csv"
+    var missingValueFile = "missingvalue.csv"
 
     // 절대경로 입력
-    var selloutData=
+    var missingValueData=
       spark.read.format("csv").
         option("header","true").
         option("Delimiter",",").
-        load("c:/spark/bin/data/"+paramFile)
+        load("c:/spark/bin/data/"+missingValueFile)
 
     // 데이터 확인 (3)
-    print(selloutData.show)
+    print(missingValueData.show)
+
+    // 절대경로 입력 - promotionData.csv 파일을 이용할게요
+    var promotionData=
+    spark.read.format("csv").
+      option("header","true").
+      option("Delimiter",",").
+      load("c:/spark/bin/data/promotionData.csv")
+    // 데이터 확인
+    print(promotionData.show)
+
+   //5. 집계함수
+   var groupDf = selloutData.
+     groupBy($"REGIONID", $"PRODUCTGROUP").
+    agg(mean($"VOLUME") as "MEAN_VOLUME")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   }
 }

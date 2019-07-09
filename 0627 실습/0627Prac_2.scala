@@ -40,6 +40,8 @@ object s8_dataWritingDatabase {
 //      x.toUpperCase
 //    })
 
+    var rddColumns = paramData.columns
+
     var regionSeg1No = rddColumns.indexOf("regionSeg1")
     var productSeg2No = rddColumns.indexOf("productSeg2")
     var regionSeg2No = rddColumns.indexOf("regionSeg2")
@@ -52,11 +54,17 @@ object s8_dataWritingDatabase {
 
 
     //2) RDD 변환
-    var quiz2Rdd = paramData.rdd
+    var quiz1Rdd = paramData.rdd
 
     //step2
-    //1) 지역, 상품별 평균 거래량 산출
-    //REGIONID, PRODUCT, YEARWEEK, QTY
+    //1) postWeek 함수 가져와
+    //2) gapWeek 가 1 일 때, 다음 거 없으면 추가
+
+    //step3
+    //1)
+
+
+
     var quiz1GroupRdd = quiz1Rdd.groupBy(x=>{
       (x.getString(regionidNo), x.getString(productNo))
     }).map(x=> {
