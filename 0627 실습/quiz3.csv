@@ -1,0 +1,38 @@
+﻿수강신청 테이블,,,,,
+stno,lecturecode,time,,,
+st001,lec001,time01,,,
+st002,lec001,time02,,,
+st012,lec004,time04,,,
+과목정보 테이블,,,,,
+advisor,date,start,end,lesson,location
+lec001,20190701,900,920,time01,loc001
+lec001,20190701,920,940,time02,loc001
+lec002,20190701,900,920,time01,loc001
+lec002,20190701,920,940,time02,loc001
+lec004,20190701,940,1000,time03,loc002
+lec004,20190701,1000,1020,time04,loc002
+,,,,,
+학생정보 테이블,,,,,
+student,stname,dept,,,
+st001,김해리,fintech,,,
+st002,박재원,fintech,,,
+st003,서보국,fintech,,,
+st004,이형섭,fintech,,,
+stoo5,지배욱,fintech,,,
+st006,고지인,fintech,,,
+st007,김동준,fintech,,,
+st008,김성림,fintech,,,
+st009,박종선,fintech,,,
+st010,송진우,fintech,,,
+st011,이원근,fintech,,,
+st012,김효관,design,,,
+교실정보 테이블,,,,,
+roomcode,buildingname,roomnumber,maxno,,
+loc001,본관,8411,10,,
+loc002,제4교육동,1211,20,,
+loc003,제1교육동,1207,27,,
+,,,,,
+,,,,,
+,,,,,
+,,,,,
+수강신청자,,,,,
